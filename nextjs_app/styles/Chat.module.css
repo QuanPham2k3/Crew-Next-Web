@@ -1,0 +1,46 @@
+/* ChatUI.module.css */
+
+.chatContainer {
+  display: flex;
+  flex-direction: column;
+  height: 400px; /* Adjust height as needed */
+  background-color: #c7c4c4;
+  border-radius: 4px;
+  padding: 1rem;
+  overflow-y: auto; /* Enable scrolling for long conversation history */
+}
+
+.messageList {
+  flex-grow: 1; /* Allow message list to fill remaining space */
+  display: flex;
+  flex-direction: column;
+}
+
+.message {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+}
+
+.userMessage {
+  background-color: #e8dfdf;
+  justify-content: flex-start;
+}
+
+.aiMessage {
+  background-color: #dfd8d8;
+  justify-content: flex-end;
+}
+
+.messageContent {
+  margin: 0; /* Remove default margin for better spacing within messages */
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.aiResponse {
+  font-weight: bold;
+  margin-top: 1rem;
+}

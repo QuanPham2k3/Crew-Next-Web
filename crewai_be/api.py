@@ -14,7 +14,7 @@ from crew import CompanyResearchCrew
 from job_manager import append_event, jobs, jobs_lock, Event
 from utils.logging import logger
 
-from web_read import get_response, get_vectorstore_from_url, get_context_retriever_chain, get_conversational_rag_chain
+from web_read import get_response, get_vectorstore_from_url
 
 load_dotenv()
 
@@ -102,6 +102,7 @@ def get_status(job_id):
         "result": result_json,
         "events": [{"timestamp": event.timestamp.isoformat(), "data": event.data} for event in job.events]
     })
+
 
 @app.route('/api/answer_question', methods=['POST'])
 def answer_question():

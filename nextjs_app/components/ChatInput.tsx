@@ -1,47 +1,51 @@
-// Chat.tsx
-'use client';
+
 import React from 'react';
-import { useChatWeb } from '@/hooks/useChatWeb'; // Assuming useChatWeb.tsx is in the same directory
+import { useChatWeb } from '@/hooks/useChatWeb';
+import styles from '@/styles/Chat.module.css';
 
-export const Chat: React.FC = () => {
-  const { url, setUrl, conversationHistory, userQuery, setUserQuery, handleUserInput, handleSubmit, aiResponse } = useChatWeb();
-
-  return (
-    <div className="chat-container">
-        <h2 className="text-xl font-bold">Chat website</h2>
-        <div className="chat-container">
-            <input 
-                type="text" 
-                value={url} 
-                onChange={(e) => setUrl(e.target.value)} 
-                placeholder="Enter website URL (optional)" 
-                className="p-2 border border-gray-300 rounded mr-2 flex-grow"
-                />
-            <textarea 
-                value={userQuery} 
-                onChange={handleUserInput} 
-                placeholder="Type your question" 
-                className="flex-grow overflow-auto border-2 border-gray-300 p-2"/>
-            <button 
-                onClick={handleSubmit} 
-                disabled={!userQuery}
-                className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-                >
-                Start
-            </button>
-        </div>
-
-        <div className="conversation-history">
-            {conversationHistory.map((message, index) => (
-            <div key={index} className={`message ${message.type}`}>
-                {message.content}
+export const ChatInput: React.FC = () => {
+    const { url, setUrl, userQuery, conversationHistory, handleUserInput, handleSubmit, errors } = useChatWeb();
+    
+    return (
+        <div className={styles.chatContainer}>
+            <div className={styles.messageList}>
+                {conversationHistory.length > 0 && (
+                <>
+                    {/* Render user and AI messages from conversationHistory */}
+                    {conversationHistory.map((message, index) => (
+                    <div key={`chatMessage-${index}`} className={styles.message}>
+                        {message.type === 'user' ? (
+                        <div className={styles.userMessage}>
+                            <p className={styles.messageContent}>{message.content}</p>
+                        </div>
+                        ) : (
+                        <div className={styles.aiMessage}>
+                            <p className={styles.messageContent}>{message.content}</p>
+                        </div>
+                        )}
+                    </div>
+                    ))}
+                </>
+                )}               
             </div>
-            ))}
-        </div>
 
-      {aiResponse && <div className="ai-response">AI: {aiResponse}</div>}
-    </div>
+            <div className="chat-input">
+                <textarea
+                    placeholder="Type your question and press Enter"
+                    value={userQuery}
+                    onChange={handleUserInput}  
+                    onKeyDown={handleSubmit}
+                    className="flex-grow overflow-auto border-2 border-gray-300 p-2"
+                />
+                <input
+                    type="text"
+                    placeholder="Enter website URL (optional)"
+                    value={url}
+                    onChange={(e) => setUrl(e.target.value)} 
+                    className="p-2 border border-gray-300 rounded mr-2 flex-grow"
+                />
+                {errors.userQuery && <div className="error-message">{errors.userQuery}</div>}
+            </div>
+        </div>
   );
 };
-
-export default Chat;

@@ -4,7 +4,9 @@ import { EventLog } from "@/components/EventLog";
 import { FinalOutput } from "@/components/FinalOutput";
 import InputSection from "@/components/InputSection";
 import { useCrewJob } from "@/hooks/useCrewJob";
-import {Chat} from "@/components/ChatInput";
+import {ChatInput} from "@/components/ChatInput";
+
+
 export default function Home() {
   // Hooks
   const crewJob = useCrewJob();
@@ -25,12 +27,7 @@ export default function Home() {
             data={crewJob.positions}
             setData={crewJob.setPositions}
           />
-          <div className="w-1/2 p-4">
-            <Chat />
-          </div>
         </div>
-
-    
 
         <div className="w-1/2 p-4 flex flex-col">
           <div className="flex justify-between items-center mb-4">
@@ -45,7 +42,10 @@ export default function Home() {
           </div>
           <FinalOutput positionInfoList={crewJob.positionInfoList} />
           <EventLog events={crewJob.events} />
-        </div>
+        </div> 
+      </div>
+      <div className="w-1/2 p-4 flex flex-col">
+        <ChatInput />
       </div>
     </div>
   );
