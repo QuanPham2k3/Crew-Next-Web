@@ -15,7 +15,7 @@ from crew import CompanyResearchCrew
 from job_manager import append_event, jobs, jobs_lock, Event
 from utils.logging import logger
 
-from web_read import get_response, get_vectorstore_from_url
+from url_read import get_response, get_vectorstore_from_url
 
 load_dotenv()
 
@@ -77,7 +77,6 @@ def run_crew():
         job_id, companies, positions))
     thread.start()
 
-    # Return the new job ID and accepted status code (202)
     return jsonify({"job_id": job_id}), 202
 
 

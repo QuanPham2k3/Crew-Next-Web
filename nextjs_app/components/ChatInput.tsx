@@ -35,7 +35,7 @@ export const ChatInput: React.FC<Jod_ID> = ({job_id}) => {
             </div>
 
             <div className="chat-input">
-                <textarea
+                <textarea  
                     placeholder="Type your question and press Enter"
                     value={user_query}
                     onChange={handleUserInput}  

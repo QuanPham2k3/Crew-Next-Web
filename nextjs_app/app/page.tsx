@@ -44,7 +44,7 @@ export default function Home() {
           <EventLog events={crewJob.events} />
         </div> 
       </div>
-      <div className="w-1/2 p-4 flex flex-col">
+      <div className="w p-4 flex flex-col">
         <ChatInput job_id={crewJob.currentJobId}/>
       </div>
     </div>
