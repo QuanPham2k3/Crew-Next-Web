@@ -8,8 +8,9 @@ from langchain.chains.history_aware_retriever import create_history_aware_retrie
 from langchain.chains.retrieval import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
 
-
+from langchain_groq import ChatGroq
 load_dotenv()
+LlmGrog = ChatGroq(model = 'llama3-70b-8192') #llama3-8b-8192
 
 def get_vectorstore_from_url(url):
     """
@@ -18,7 +19,7 @@ def get_vectorstore_from_url(url):
     Returns:vector_store: The vector store created from the document.
     """
     loader = WebBaseLoader(url)
-    document = loader.load()
+    document = loader.aload()
 
     text_splitter = RecursiveCharacterTextSplitter()
     document_chunks = text_splitter.split_documents(document)
@@ -34,7 +35,8 @@ def get_context_retriever_chain(vector_store):
     Parameters:vector_store: The vector store to create the context retriever chain from.
     Returns:retriever_chain: The created context retriever chain.
     """
-    llm = ChatOpenAI(model="gpt-3.5-turbo-0125")  # Replace with actual model if available
+    llm = LlmGrog
+    # ChatOpenAI(model="gpt-3.5-turbo-0125")  # Replace with actual model if available
 
     retriever = vector_store.as_retriever()
 
@@ -55,7 +57,8 @@ def get_conversational_rag_chain(retriever_chain):
     Parameters:retriever_chain: The context retriever chain to create the conversational RAG chain from.
     Returns:retrieval_chain: The created conversational RAG chain.
     """
-    llm = ChatOpenAI(model="gpt-3.5-turbo-0125")  # Replace if needed
+    llm = LlmGrog
+    # ChatOpenAI(model="gpt-3.5-turbo-0125")  # Replace if needed
 
     prompt = ChatPromptTemplate.from_messages([
         ("system", "Answer the user's questions based on the below context:\n\n{context}"),
@@ -86,3 +89,14 @@ def get_response(user_input, vector_store):
     
     return response['answer']
 
+def main():
+    urls= ["https://www.bloomberg.com/news/articles/2024-01-06/vietnam-ev-maker-vinfast-names-parent-founder-vuong-as-new-ceo",
+                    "https://www.prnewswire.com/news-releases/vinfast-announces-leadership-transition-302027655.html",
+                    "https://sustainabilitymag.com/renewable-energy/meet-the-billionaire-taking-vietnam-ev-maker-vinfast-global"]
+
+    vector_store = get_vectorstore_from_url(urls)
+    user_query = "Who is the new CEO of VinFast?"
+    answer = get_response(user_query, vector_store)
+    print(answer)
+if __name__ == '__main__':
+    main()

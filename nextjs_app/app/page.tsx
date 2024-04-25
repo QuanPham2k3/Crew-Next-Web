@@ -45,7 +45,7 @@ export default function Home() {
         </div> 
       </div>
       <div className="w-1/2 p-4 flex flex-col">
-        <ChatInput />
+        <ChatInput job_id={crewJob.currentJobId}/>
       </div>
     </div>
   );

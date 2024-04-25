@@ -3,8 +3,13 @@ import React from 'react';
 import { useChatWeb } from '@/hooks/useChatWeb';
 import styles from '@/styles/Chat.module.css';
 
-export const ChatInput: React.FC = () => {
-    const { url, setUrl, userQuery, conversationHistory, handleUserInput, handleSubmit, errors } = useChatWeb();
+type Jod_ID = {
+    job_id: string;
+
+}
+export const ChatInput: React.FC<Jod_ID> = ({job_id}) => {
+    console.log("jodID input",job_id);
+    const { user_query, conversationHistory, handleUserInput, handleSubmit, errors } = useChatWeb(job_id as string);
     
     return (
         <div className={styles.chatContainer}>
@@ -32,18 +37,12 @@ export const ChatInput: React.FC = () => {
             <div className="chat-input">
                 <textarea
                     placeholder="Type your question and press Enter"
-                    value={userQuery}
+                    value={user_query}
                     onChange={handleUserInput}  
                     onKeyDown={handleSubmit}
                     className="flex-grow overflow-auto border-2 border-gray-300 p-2"
                 />
-                <input
-                    type="text"
-                    placeholder="Enter website URL (optional)"
-                    value={url}
-                    onChange={(e) => setUrl(e.target.value)} 
-                    className="p-2 border border-gray-300 rounded mr-2 flex-grow"
-                />
+              
                 {errors.userQuery && <div className="error-message">{errors.userQuery}</div>}
             </div>
         </div>

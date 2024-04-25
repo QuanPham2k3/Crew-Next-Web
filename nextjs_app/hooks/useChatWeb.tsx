@@ -9,10 +9,11 @@ interface Message {
 }
 
 const STORAGE_KEY = 'chatHistory';
-export const useChatWeb = () => {
-    const [url, setUrl] = useState('');
+
+export const useChatWeb = (currentJobId : string) => {
+    
     const [conversationHistory, setConversationHistory] = useState<Message[]>([]);
-    const [userQuery, setUserQuery] = useState('');
+    const [user_query, setUserQuery] = useState('');
     const [aiResponse, setAiResponse] = useState('');
     const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -32,9 +33,7 @@ export const useChatWeb = () => {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(conversationHistory));
     }, [conversationHistory]);
 
-    const handleUrlChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setUrl(event.target.value);
-    };
+   
 
     const handleUserInput = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         const newQuery = event.target.value;
@@ -52,16 +51,16 @@ export const useChatWeb = () => {
     };
 
     const handleSubmit = async (event: React.KeyboardEvent) => {
-        if (event.key === 'Enter' && !Object.values(errors).length) {
+        if (event.key === 'Enter' && !Object.values(errors).length && currentJobId) {
             // Reset errors before API call
             setErrors({});
-            console.log('Submitting question:', url, userQuery);
-
+            console.log('Submitting question:', user_query);
+            
             try {
                 const response = await axios.post('http://localhost:3001/api/answer_question', 
                     {
-                        url,
-                        userQuery,
+                        job_id : currentJobId,
+                        user_query,
                     });
                 toast.success('Chat started');
 
@@ -72,7 +71,7 @@ export const useChatWeb = () => {
                     console.log('Previous conversation history:', prevConversationHistory); // Log previous state
                     const newConversationHistory = [
                         ...prevConversationHistory,
-                        { type: 'user', content: userQuery },
+                        { type: 'user', content: user_query },
                         { type: 'ai', content: answer },
                     ];
                     console.log('Updated conversation history:', newConversationHistory); // Log updated state
@@ -90,10 +89,8 @@ export const useChatWeb = () => {
     };
 
     return {
-        url,
-        setUrl,
         conversationHistory,
-        userQuery,
+        user_query,
         setUserQuery,
         handleUserInput,
         handleSubmit,

@@ -8,6 +8,7 @@ from uuid import uuid4
 from flask import Flask, jsonify, request, abort
 from flask_cors import CORS
 from dotenv import load_dotenv
+import requests
 
 # Local application/library specific imports
 from crew import CompanyResearchCrew
@@ -108,19 +109,41 @@ def get_status(job_id):
 def answer_question():
     logger.info("Received request to run chat website")
     # Handle the request to answer a question based on content from a blog URL
-    url = request.json['url'] if 'url' in request.json else None
-    user_query = request.json['userQuery']
-    
+    job_id = request.json['job_id'] if 'job_id' in request.json else None
+    user_query = request.json['user_query']
+
     # Create a vectorstore from URL if available
     vector_store = None
-    if url:
-        vector_store = get_vectorstore_from_url(url)
     
-    # Generate a response using vectorstore and user input
+    extracted_urls = []
+
+    if job_id:
+        try:
+            # Call the `get_status` endpoint to retrieve job information
+            response = requests.get(f"http://localhost:3001/api/crew/{job_id}")
+            response.raise_for_status()  # Raise an exception for non-2xx status codes
+            if response.status_code == 200:
+                print("Successful response received!")
+                job_data_str = response.text
+                try:
+                    job_data = json.loads(job_data_str)
+                    # ... proceed with extracting URLs from job_data ...
+                except json.JSONDecodeError as e:
+                    logger.error(f"Error decoding JSON data: {e}")
+            
+            if 'result' in job_data and 'positions' in job_data['result']:
+                for position in job_data['result']['positions']:
+                    extracted_urls.extend(position.get('blog_articles_urls', []))
+                
+        except requests.exceptions.RequestException as e:
+            logger.error(f"Error fetching job information for ID {job_id}: {e}")
+
+    vector_store = get_vectorstore_from_url(extracted_urls)
+    # Generate a response using vectorstore and user input, potentially considering extracted URLs
     answer = get_response(user_query, vector_store)
     
-    # Return the answer in JSON format
-    return jsonify({'answer': answer}),  202
+    return jsonify({'answer': answer}), 202
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=3001)
