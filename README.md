@@ -1,2 +1,2 @@
 # Welcome to the NextJS CrewAI Full Stack Tutorial
-To see how to run this fullstack application, checkout the YouTube demo here: https://youtu.be/7OA2ZbJvXJY?si=ieobHEdUwu5nHwRN
+To see how to build and run this fullstack application, checkout the step-by-step YouTube tutorial here: https://youtu.be/d8juNbo3onk
