@@ -12,7 +12,7 @@ class CompanyResearchCrew:
         self.job_id = job_id
         self.crew = None
         self.llm = ChatOpenAI(model="gpt-3.5-turbo-0125")
-
+        
     def setup_crew(self, companies: list[str], positions: list[str]):
         # Set up the crew for company research
         agents = CompanyResearchAgents()

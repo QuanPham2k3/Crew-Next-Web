@@ -89,10 +89,11 @@ def get_response(user_input, vector_store):
     
     return response['answer']
 
+# run test
 def main():
     urls= ["https://www.bloomberg.com/news/articles/2024-01-06/vietnam-ev-maker-vinfast-names-parent-founder-vuong-as-new-ceo",
-                    "https://www.prnewswire.com/news-releases/vinfast-announces-leadership-transition-302027655.html",
-                    "https://sustainabilitymag.com/renewable-energy/meet-the-billionaire-taking-vietnam-ev-maker-vinfast-global"]
+            "https://www.prnewswire.com/news-releases/vinfast-announces-leadership-transition-302027655.html",
+            "https://sustainabilitymag.com/renewable-energy/meet-the-billionaire-taking-vietnam-ev-maker-vinfast-global"]
 
     vector_store = get_vectorstore_from_url(urls)
     user_query = "Who is the new CEO of VinFast?"

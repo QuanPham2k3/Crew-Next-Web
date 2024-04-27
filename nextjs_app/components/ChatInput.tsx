@@ -47,4 +47,4 @@ export const ChatInput: React.FC<Jod_ID> = ({job_id}) => {
             </div>
         </div>
   );
-};
+};  

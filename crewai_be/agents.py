@@ -2,13 +2,14 @@ from typing import List
 from crewai import Agent
 from langchain_openai import ChatOpenAI
 from crewai_tools import SerperDevTool, ScrapeWebsiteTool
-    
+from langchain_groq import ChatGroq
 class CompanyResearchAgents():
 
     def __init__(self):
         self.searchInternetTool = SerperDevTool()
         self.llm = ChatOpenAI(model="gpt-3.5-turbo-0125")
-        self.webScrapeTool = ScrapeWebsiteTool()
+        #ChatGroq(model="llama3-8b-8192")
+        # self.webScrapeTool = ScrapeWebsiteTool()
 
     def research_manager(self, companies: List[str], positions: List[str]) -> Agent:
         return Agent(
@@ -32,7 +33,8 @@ class CompanyResearchAgents():
             llm=self.llm,
             tools=[self.searchInternetTool],
             verbose=True,
-            allow_delegation=True
+            allow_delegation=True,
+            max_rpm = 1
         )
 
     def company_research_agent(self) -> Agent:
@@ -52,7 +54,8 @@ class CompanyResearchAgents():
                 """,
             tools=[self.searchInternetTool],
             llm=self.llm,
-            verbose=True
+            verbose=True,
+            max_rpm = 1
         )
 
   
