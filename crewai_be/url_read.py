@@ -1,7 +1,8 @@
 from langchain_community.document_loaders import WebBaseLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import Chroma
-from langchain_openai import OpenAIEmbeddings, ChatOpenAI
+from langchain_community.embeddings import GPT4AllEmbeddings
+#from langchain_openai import OpenAIEmbeddings, ChatOpenAI
 from dotenv import load_dotenv
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain.chains.history_aware_retriever import create_history_aware_retriever
@@ -24,7 +25,7 @@ def get_vectorstore_from_url(url):
     text_splitter = RecursiveCharacterTextSplitter()
     document_chunks = text_splitter.split_documents(document)
 
-    vector_store = Chroma.from_documents(document_chunks, OpenAIEmbeddings())
+    vector_store = Chroma.from_documents(document_chunks, GPT4AllEmbeddings()) #OpenAIEmbeddings() 
 
     return vector_store
 
@@ -91,12 +92,10 @@ def get_response(user_input, vector_store):
 
 # run test
 def main():
-    urls= ["https://www.bloomberg.com/news/articles/2024-01-06/vietnam-ev-maker-vinfast-names-parent-founder-vuong-as-new-ceo",
-            "https://www.prnewswire.com/news-releases/vinfast-announces-leadership-transition-302027655.html",
-            "https://sustainabilitymag.com/renewable-energy/meet-the-billionaire-taking-vietnam-ev-maker-vinfast-global"]
+    urls= [""]
 
     vector_store = get_vectorstore_from_url(urls)
-    user_query = "Who is the new CEO of VinFast?"
+    user_query = "summarize the document"
     answer = get_response(user_query, vector_store)
     print(answer)
 if __name__ == '__main__':

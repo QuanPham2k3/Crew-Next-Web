@@ -1,56 +1,55 @@
 from crewai import Task, Agent
 from textwrap import dedent
 
-
-from job_manager import append_event
-from models import PositionInfo, PositionInfoList
+from search_manager import append_event
+from models import SearchInfo, SearchInfoList
 from utils.logging import logger
 
+class TopicResearchTasks():
 
-class CompanyResearchTasks():
-
-    def __init__(self, job_id):
-        self.job_id = job_id
+    def __init__(self, search_id):
+        self.search_id = search_id
 
     def append_event_callback(self, task_output):
         # Callback function to append task output to the job's event list
         logger.info("Callback called: %s", task_output)
-        append_event(self.job_id, task_output.exported_output)
+        append_event(self.search_id, task_output.expected_output)
 
-    def manage_research(self, agent: Agent, companies: list[str], positions: list[str], tasks: list[Task]):
+    def manage_research(self, agent: Agent, topics: list[str], categories: list[str], tasks: list[Task]):
         return Task(
-            description=dedent(f"""Based on the list of companies {companies} and the positions {positions},
-                use the results from the Company Research Agent to research each position in each company.
-                to put together a json object containing the URLs for 3 blog articles                 
+            description=dedent(f"""Leveraging the list of topics {topics} and categories {categories}, 
+                               utilize the Research Agent's findings to investigate each category within each 
+                               topic. Generate an output in the form of a JSON object containing URLs of 1 to 3 
+                               most reputable websites related to each topic for each category.                  
                 """),
             agent=agent,
             expected_output=dedent(
-                """A json object containing the URLs for 3 blog articles for each position in each company. 
+                """The Research Agent, responsible for gathering information and providing relevant URLs
                 """),
             callback=self.append_event_callback,
             context=tasks,
-            output_json=PositionInfoList
+            output_json=SearchInfoList
         )
 
-    def company_research(self, agent: Agent, company: str, positions: list[str]):
+    def topic_research(self, agent: Agent, topic: str, categories: list[str]):
         return Task(
-            description=dedent(f"""Research the position {positions} for the {company} company. 
-                For each position,and the URLs for 3 recent blog articles for the person in each position.
-                Return this collected information in a JSON object.
+            description=dedent(f"""Search for each category {categories} for the topic {topic}. 
+                               For each category, find URLs of 1 to 3 websites for each topic. 
+                               Return the collected information in a JSON object.
                                
-                Helpful Tips:
-                - To find the blog articles names and URLs, perform searches on Google such like the following:
-                    - "{company} [POSITION HERE] blog articles"
+                Guidelines:
+                - Search for topic names and URLs, searching on Google with the topic:
+                "{topic} [category here] website"
                 
-                Important:
-                - Once you've found the information, immediately stop searching for additional information.
-                - Only return the requested information. NOTHING ELSE!
-                - Do not generate fake information. Only return the information you find. Nothing else!
-                - Do not stop researching until you find the requested information for each position in the company.
+                Important Considerations:
+                - Once you find information, stop searching immediately to gather more information.
+                - Only return the requested results. NOTHING ELSE!
+                - Do not create fake information. Only return the results found. Nothing else!
+                - Do not stop searching until you find the requested information for each topic.
                 """),
             agent=agent,
-            expected_output="""A JSON object containing the researched information for each position in the company.""",
+            expected_output="""A JSON object containing the search information for each topic in each category.""",
             callback=self.append_event_callback,
-            output_json=PositionInfo,
+            output_json=SearchInfo,
             async_execution=True
         )
