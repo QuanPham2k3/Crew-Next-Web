@@ -25,11 +25,12 @@ class Search:
 
 # Function to append an event to a job
 def append_event(search_id: str, event_data: str):
+
     with searchs_lock:
         if search_id not in searchs:
             # If the search ID is not present, create a new search
             logger.info("Search %s started", search_id)
-            searchs[Dict] = Search(
+            searchs[search_id] = Search(
                 status='STARTED',
                 events=[],
                 result='')

@@ -1,8 +1,8 @@
 from langchain_community.document_loaders import WebBaseLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import Chroma
-from langchain_community.embeddings import GPT4AllEmbeddings
-#from langchain_openai import OpenAIEmbeddings, ChatOpenAI
+
+from langchain_openai import OpenAIEmbeddings, ChatOpenAI
 from dotenv import load_dotenv
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain.chains.history_aware_retriever import create_history_aware_retriever
@@ -25,7 +25,7 @@ def get_vectorstore_from_url(url):
     text_splitter = RecursiveCharacterTextSplitter()
     document_chunks = text_splitter.split_documents(document)
 
-    vector_store = Chroma.from_documents(document_chunks, GPT4AllEmbeddings()) #OpenAIEmbeddings() 
+    vector_store = Chroma.from_documents(document_chunks, OpenAIEmbeddings()) 
 
     return vector_store
 
