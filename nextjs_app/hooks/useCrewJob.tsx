@@ -15,70 +15,69 @@ export type NamedUrl = {
   url: string;
 };
 
-export type PositionInfo = {
-  company: string;
-  position: string;
-  name: string;
-  blog_articles_urls: string[];
+export type SearchInfo = {
+  topic: string;
+  category: string;
+  web_urls: string[];
   
 };
 
 
-export const useCrewJob = () => {
+export const useCrewSearch = () => {
   // State
   const [running, setRunning] = useState<boolean>(false);
-  const [companies, setCompanies] = useState<string[]>([]);
-  const [positions, setPositions] = useState<string[]>([]);
+  const [topics, setTopics] = useState<string[]>([]);
+  const [categories, setCategories] = useState<string[]>([]);
   const [events, setEvents] = useState<EventType[]>([]);
-  const [positionInfoList, setPositionInfoList] = useState<PositionInfo[]>([]);
-  const [currentJobId, setCurrentJobId] = useState<string>("");
+  const [searchInfoList, setSearchInfoList] = useState<SearchInfo[]>([]);
+  const [currentSearchId, setCurrentSearchId] = useState<string>("");
 
 
   // useEffects
   useEffect(() => {
     let intervalId: number;
-    console.log("currentJobId", currentJobId);
+    console.log("search crew Id", currentSearchId);
 
-    const fetchJobStatus = async () => {
+    const fetchSearchStatus = async () => {
       try {
-        console.log("calling fetchJobStatus");
+        console.log("calling fetchSearchStatus");
         const response = await axios.get<{
           status: string;
-          result: { positions: PositionInfo[] };
+          result: { searchs: SearchInfo[] };
           events: EventType[];
-        }>(`http://localhost:3001/api/crew/${currentJobId}`);
+        }>(`http://localhost:3001/api/crew/${currentSearchId}`);
         const { status, events: fetchedEvents, result } = response.data;
         
         console.log("status update", response.data);
 
         setEvents(fetchedEvents);
         if (result) {
-          console.log("setting job result", result);
-          console.log("setting job positions", result.positions);
-          setPositionInfoList(result.positions || []);
+          console.log("setting Search result", result);
+          console.log("setting Search categories", result.searchs);
+          setSearchInfoList(result.searchs || []);
           
         }
-
+          
 
         if (status === "COMPLETE" || status === "ERROR") {
           if (intervalId) {
             clearInterval(intervalId);
           }
           setRunning(false);
-          toast.success(`Job ${status.toLowerCase()}.`);
+          toast.success(`Search ${status.toLowerCase()}.`);
         }
       } catch (error) {
         if (intervalId) {
           clearInterval(intervalId);
         }
         setRunning(false);
-        toast.error("Failed to get job status.");
+        toast.error("Failed to get Search status.");
         console.error(error);
       }
     };
 
-    if (currentJobId !== "") {
-      intervalId = setInterval(fetchJobStatus, 1000) as unknown as number;
+    if (currentSearchId !== "") {
+      intervalId = setInterval(fetchSearchStatus, 1000) as unknown as number;
     }
 
     return () => {
@@ -86,31 +85,31 @@ export const useCrewJob = () => {
         clearInterval(intervalId);
       }
     };
-  }, [currentJobId]);
+  }, [currentSearchId]);
 
-  const startJob = async () => {
-    // Clear previous job data
+  const startSearch = async () => {
+    // Clear previous Search data
     setEvents([]);
-    setPositionInfoList([]);
+    setSearchInfoList([]);
     setRunning(true);
 
     try {
-      const response = await axios.post<{ job_id: string }>(
+      const response = await axios.post<{ search_id: string }>(
         "http://localhost:3001/api/crew",
         {
-          companies,
-          positions,
+          topics,
+          categories,
         }
       );
 
-      toast.success("Job started");
+      toast.success("Search started");
 
-      console.log("jobId", response.data.job_id);
-      setCurrentJobId(response.data.job_id);
+      console.log("SearchId", response.data.search_id);
+      setCurrentSearchId(response.data.search_id);
     } catch (error) {
-      toast.error("Failed to start job");
+      toast.error("Failed to start Search");
       console.error(error);
-      setCurrentJobId("");
+      setCurrentSearchId("");
     }
   };
 
@@ -118,15 +117,15 @@ export const useCrewJob = () => {
     running,
     events,
     setEvents,
-    positionInfoList,
-    setPositionInfoList,
-    currentJobId,
-    setCurrentJobId,
-    companies,
-    setCompanies,
-    positions,
-    setPositions,
-    startJob,
+    searchInfoList,
+    setSearchInfoList,
+    currentSearchId,
+    setCurrentSearchId,
+    topics,
+    setTopics,
+    categories,
+    setCategories,
+    startSearch,
    
   };
 };

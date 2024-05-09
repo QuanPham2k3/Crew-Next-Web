@@ -13,4 +13,4 @@ class SearchInfo(BaseModel):
     
 
 class SearchInfoList(BaseModel):
-    positions: List[SearchInfo]
+    searchs: List[SearchInfo]

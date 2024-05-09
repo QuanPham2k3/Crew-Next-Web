@@ -10,7 +10,7 @@ interface Message {
 
 const STORAGE_KEY = 'chatHistory';
 
-export const useChatWeb = (currentJobId : string) => {
+export const useChatWeb = (currentSearchId : string) => {
     
     const [conversationHistory, setConversationHistory] = useState<Message[]>([]);
     const [user_query, setUserQuery] = useState('');
@@ -51,7 +51,7 @@ export const useChatWeb = (currentJobId : string) => {
     };
 
     const handleSubmit = async (event: React.KeyboardEvent) => {
-        if (event.key === 'Enter' && !Object.values(errors).length && currentJobId) {
+        if (event.key === 'Enter' && !Object.values(errors).length && currentSearchId) {
             // Reset errors before API call
             setErrors({});
             console.log('Submitting question:', user_query);
@@ -59,8 +59,8 @@ export const useChatWeb = (currentJobId : string) => {
             try {
                 const response = await axios.post('http://localhost:3001/api/answer_question', 
                     {
-                        job_id : currentJobId,
-                        user_query,
+                        search_id : currentSearchId,
+                        user_query : user_query,
                     });
                 toast.success('Chat started');
 

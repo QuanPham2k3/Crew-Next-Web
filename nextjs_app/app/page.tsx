@@ -3,29 +3,29 @@
 import { EventLog } from "@/components/EventLog";
 import { FinalOutput } from "@/components/FinalOutput";
 import InputSection from "@/components/InputSection";
-import { useCrewJob } from "@/hooks/useCrewJob";
+import { useCrewSearch } from "@/hooks/useCrewJob";
 import {ChatInput} from "@/components/ChatInput";
 
 
 export default function Home() {
   // Hooks
-  const crewJob = useCrewJob();
+  const crewSearch = useCrewSearch();
 
   return (
     <div className="bg-white min-h-screen text-black">
       <div className="flex">
         <div className="w-1/2 p-4">
           <InputSection
-            title="Companies"
-            placeholder="Add a company"
-            data={crewJob.companies}
-            setData={crewJob.setCompanies}
+            title="Topics"
+            placeholder="Add a topic"
+            data={crewSearch.topics}
+            setData={crewSearch.setTopics}
           />
           <InputSection
-            title="Positions"
-            placeholder="Add a position"
-            data={crewJob.positions}
-            setData={crewJob.setPositions}
+            title="Categories"
+            placeholder="Add a category"
+            data={crewSearch.categories}
+            setData={crewSearch.setCategories}
           />
         </div>
 
@@ -33,19 +33,19 @@ export default function Home() {
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-2xl font-bold">Output</h2>
             <button
-              onClick={() => crewJob.startJob()}
+              onClick={() => crewSearch.startSearch()}
               className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded text-sm"
-              disabled={crewJob.running}
+              disabled={crewSearch.running}
             >
-              {crewJob.running ? "Running..." : "Start"}
+              {crewSearch.running ? "Running..." : "Start"}
             </button>
           </div>
-          <FinalOutput positionInfoList={crewJob.positionInfoList} />
-          <EventLog events={crewJob.events} />
+          <FinalOutput searchInfoList={crewSearch.searchInfoList} />
+          <EventLog events={crewSearch.events} />
         </div> 
       </div>
       <div className="w p-4 flex flex-col">
-        <ChatInput job_id={crewJob.currentJobId}/>
+        <ChatInput Search_id={crewSearch.currentSearchId}/>
       </div>
     </div>
   );

@@ -3,13 +3,13 @@ import React from 'react';
 import { useChatWeb } from '@/hooks/useChatWeb';
 import styles from '@/styles/Chat.module.css';
 
-type Jod_ID = {
-    job_id: string;
+type Search_ID = {
+    Search_id: string;
 
 }
-export const ChatInput: React.FC<Jod_ID> = ({job_id}) => {
-    console.log("jodID input",job_id);
-    const { user_query, conversationHistory, handleUserInput, handleSubmit, errors } = useChatWeb(job_id as string);
+export const ChatInput: React.FC<Search_ID> = ({Search_id}) => {
+    console.log("SearchID input",Search_id);
+    const { user_query, conversationHistory, handleUserInput, handleSubmit, errors } = useChatWeb(Search_id as string);
     
     return (
         <div className={styles.chatContainer}>

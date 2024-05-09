@@ -130,9 +130,9 @@ def answer_question():
                 except json.JSONDecodeError as e:
                     logger.error(f"Error decoding JSON data: {e}")
             
-            if 'result' in search_data and 'positions' in search_data['result']:
-                for position in search_data['result']['positions']:
-                    extracted_urls.extend(position.get('web_urls', []))
+            if 'result' in search_data and 'searchs' in search_data['result']:
+                for url_search in search_data['result']['searchs']:
+                    extracted_urls.extend(url_search.get('web_urls', []))
                 
         except requests.exceptions.RequestException as e:
             logger.error(f"Error fetching search information for ID {search_id}: {e}")
@@ -141,7 +141,7 @@ def answer_question():
     # Generate a response using vectorstore and user input, potentially considering extracted URLs
     answer = get_response(user_query, vector_store)
     
-    return jsonify({'answer': answer}), 202
+    return jsonify({"answer": answer})
 
 
 if __name__ == '__main__':
