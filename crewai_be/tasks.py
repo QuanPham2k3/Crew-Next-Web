@@ -13,7 +13,7 @@ class TopicResearchTasks():
     def append_event_callback(self, task_output):
         # Callback function to append task output to the job's event list
         logger.info("Callback called: %s", task_output)
-        append_event(self.search_id, task_output.expected_output)
+        append_event(self.search_id, task_output.exported_output)
 
     def manage_research(self, agent: Agent, topics: list[str], categories: list[str], tasks: list[Task]):
         return Task(
